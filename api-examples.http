@@ -1,0 +1,169 @@
+### NeuroFlow API — Ejemplos para Thunder Client / REST Client (VS Code)
+### Instala la extensión "REST Client" en VS Code para ejecutar estos requests
+### directamente desde el archivo con Ctrl+Click en "Send Request".
+
+@baseUrl = http://localhost:3001/api
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HEALTH CHECK
+# ─────────────────────────────────────────────────────────────────────────────
+
+### GET /api/health
+GET {{baseUrl}}/health
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. LEADS — POST /api/leads
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar lead válido
+POST {{baseUrl}}/leads
+Content-Type: application/json
+
+{
+  "name": "Ana García",
+  "email": "ana@ejemplo.com",
+  "userType": "estudiante"
+}
+
+###
+
+### Error: correo duplicado (segundo intento con el mismo correo)
+POST {{baseUrl}}/leads
+Content-Type: application/json
+
+{
+  "name": "Ana García",
+  "email": "ana@ejemplo.com",
+  "userType": "estudiante"
+}
+
+###
+
+### Error: correo inválido
+POST {{baseUrl}}/leads
+Content-Type: application/json
+
+{
+  "name": "Carlos",
+  "email": "no-es-un-correo",
+  "userType": "profesor"
+}
+
+###
+
+### Error: userType fuera del enum
+POST {{baseUrl}}/leads
+Content-Type: application/json
+
+{
+  "name": "Luis",
+  "email": "luis@ejemplo.com",
+  "userType": "hacker"
+}
+
+###
+
+### Error: campos faltantes
+POST {{baseUrl}}/leads
+Content-Type: application/json
+
+{
+  "email": "incompleto@ejemplo.com"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 2. NEWSLETTER — POST /api/newsletter
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Suscribir correo válido
+POST {{baseUrl}}/newsletter
+Content-Type: application/json
+
+{
+  "email": "newsletter@ejemplo.com"
+}
+
+###
+
+### Error: correo duplicado
+POST {{baseUrl}}/newsletter
+Content-Type: application/json
+
+{
+  "email": "newsletter@ejemplo.com"
+}
+
+###
+
+### Error: sin correo
+POST {{baseUrl}}/newsletter
+Content-Type: application/json
+
+{}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3. CONTACTO — POST /api/contact
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Enviar mensaje válido
+POST {{baseUrl}}/contact
+Content-Type: application/json
+
+{
+  "name": "María López",
+  "email": "maria@ejemplo.com",
+  "message": "Hola, me interesa integrar NeuroFlow en mi universidad. ¿Cómo puedo contactar al equipo de ventas?"
+}
+
+###
+
+### Error: mensaje muy corto
+POST {{baseUrl}}/contact
+Content-Type: application/json
+
+{
+  "name": "Juan",
+  "email": "juan@ejemplo.com",
+  "message": "Hola"
+}
+
+###
+
+### Error: falta el mensaje
+POST {{baseUrl}}/contact
+Content-Type: application/json
+
+{
+  "name": "Pedro",
+  "email": "pedro@ejemplo.com"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 4. ANALYTICS — POST /api/analytics/visit
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar visita
+POST {{baseUrl}}/analytics/visit
+Content-Type: application/json
+
+{
+  "page": "/"
+}
+
+###
+
+### Registrar visita a sección de precios
+POST {{baseUrl}}/analytics/visit
+Content-Type: application/json
+
+{
+  "page": "/precios"
+}
+
+###
+
+### Error: sin página
+POST {{baseUrl}}/analytics/visit
+Content-Type: application/json
+
+{}
